@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -26,6 +28,10 @@ public class Fragment_1 extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    //we declare out UI elements
+    private EditText editText;
+    private Button button;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +70,25 @@ public class Fragment_1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragment_1, container, false);
+
+        View v =  inflater.inflate(R.layout.fragment_fragment_1, container, false);
+
+        // get our views
+        editText = v.findViewById(R.id.editText);
+        button = v.findViewById(R.id.button);
+
+        //set onClick listener for out button
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get the input from the edit text and send it to main activity
+                CharSequence input = editText.getText(); //we use charSequence because we don`t need to cast it to String
+                //send the data to MainActivity via our interface
+                mListener.onInputFragment_1_sent(input);
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,6 +101,7 @@ public class Fragment_1 extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        //check if the MainActivity implements our interface, otherwise throw error
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -88,6 +113,7 @@ public class Fragment_1 extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        //set our listener to null when we remove the fragment
         mListener = null;
     }
 
@@ -104,5 +130,12 @@ public class Fragment_1 extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        //declare interface method using for communication between fragments
+        void onInputFragment_1_sent(CharSequence input);
+    }
+
+    //public method so we can get our data from MainActivity to this Fragment
+    public void updateEditText(CharSequence text) {
+        editText.setText(text);
     }
 }
